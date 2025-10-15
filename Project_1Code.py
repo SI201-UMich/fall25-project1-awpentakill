@@ -89,3 +89,41 @@ def calculate_total_sales_by_region_segment(data):
     print(f'Total sales by region and segment: {sales_by_group}')
     return sales_by_group
 
+
+# =========================================================
+# Calculations II
+# =========================================================
+
+def calculate_profit_ratio_by_discount_region(data):
+    ratios = {}
+
+    for row in data:
+        region = row['Region']
+        discount = float(row['Discount'])
+        sales = float(row['Sales'])
+        profit = float(row['Profit'])
+
+        if sales == 0:
+            continue
+
+        ratio = profit / sales
+
+        if region not in ratios:
+            ratios[region] = {'low': [], 'high': []}
+
+        if discount > 0.2:
+            ratios[region]['high'].append(ratio)
+        else:
+            ratios[region]['low'].append(ratio)
+
+    result = {}
+    for region in ratios:
+        low_list = ratios[region]['low']
+        high_list = ratios[region]['high']
+
+        low_avg = sum(low_list) / len(low_list) if len(low_list) > 0 else 0
+        high_avg = sum(high_list) / len(high_list) if len(high_list) > 0 else 0
+
+        result[region] = (low_avg, high_avg)
+    print(f'Low and high profit ratios by region: {result}')
+    return result
