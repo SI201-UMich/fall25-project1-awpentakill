@@ -157,3 +157,93 @@ def calculate_profit_margin_by_shipmode_category(data):
         avg_margin[key] = margin_sum[key] / count[key]
     print(f'Average profit margin by ship mode and category: {avg_margin}')
     return avg_margin
+
+
+# =========================================================
+# Calculations III
+# =========================================================
+
+def calculate_avg_order_value_by_segment_shipmode(data):
+    total_value = {}
+    count = {}
+
+    for row in data:
+        segment = row['Segment']
+        ship_mode = row['Ship Mode']
+        qty = float(row['Quantity'])
+        sales = float(row['Sales'])
+        key = (segment, ship_mode)
+
+        if qty == 0:
+            continue
+
+        avg_value = sales / qty
+
+        if key not in total_value:
+            total_value[key] = 0
+            count[key] = 0
+
+        total_value[key] += avg_value
+        count[key] += 1
+
+    avg_order_value = {}
+    for key in total_value:
+        avg_order_value[key] = total_value[key] / count[key]
+    print(f'Average order value by segment and ship mode: {avg_order_value}')
+    return avg_order_value
+
+
+def get_top3_cities_by_profit_in_category(data):
+    category_city_profit = {}
+
+    for row in data:
+        category = row['Category']
+        city = row['City']
+        profit = float(row['Profit'])
+
+        if category not in category_city_profit:
+            category_city_profit[category] = {}
+
+        if city not in category_city_profit[category]:
+            category_city_profit[category][city] = 0
+
+        category_city_profit[category][city] += profit
+
+    result = {}
+    for category, city_dict in category_city_profit.items():
+        sorted_cities = sorted(city_dict.items(), key=lambda x: x[1], reverse=True)
+        top3 = sorted_cities[:3]
+        result[category] = top3
+    print(f'Top 3 cities by profit in category: {result}')
+    return result
+
+
+# =========================================================
+# Main Function
+# =========================================================
+def main():
+    filename = "SampleSuperstore.csv"
+    data = read_csv_to_dict(filename)
+
+    avg_profit = calculate_avg_profit_by_subcategory_region(data)
+    total_sales = calculate_total_sales_by_region_segment(data)
+    profit_discount = calculate_profit_ratio_by_discount_region(data)
+    profit_margin = calculate_profit_margin_by_shipmode_category(data)
+    avg_order_value = calculate_avg_order_value_by_segment_shipmode(data)
+    top3_cities = get_top3_cities_by_profit_in_category(data)
+
+    print("Calculations complete!")
+    print("Top 3 cities by profit (example):", top3_cities)
+
+    write_dict_to_csv("avg_profit_by_subcategory_region.csv", avg_profit,
+                      ["Sub-Category", "Region", "Average Profit"])
+    write_dict_to_csv("total_sales_by_region_segment.csv", total_sales,
+                      ["Region", "Segment", "Total Sales"])
+    write_dict_to_csv("profit_ratio_by_discount_region.csv", profit_discount,
+                      ["Region", "Low Discount Ratio", "High Discount Ratio"])
+    write_dict_to_csv("profit_margin_by_shipmode_category.csv", profit_margin,
+                      ["Ship Mode", "Category", "Average Margin"])
+    write_dict_to_csv("avg_order_value_by_segment_shipmode.csv", avg_order_value,
+                      ["Segment", "Ship Mode", "Avg Order Value"])
+    write_dict_to_csv("top3_cities_by_profit_in_category.csv", top3_cities,
+                      ["Category", "City1", "Profit1", "City2", "Profit2", "City3", "Profit3"])
