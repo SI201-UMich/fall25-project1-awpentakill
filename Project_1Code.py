@@ -127,3 +127,33 @@ def calculate_profit_ratio_by_discount_region(data):
         result[region] = (low_avg, high_avg)
     print(f'Low and high profit ratios by region: {result}')
     return result
+
+
+def calculate_profit_margin_by_shipmode_category(data):
+    margin_sum = {}
+    count = {}
+
+    for row in data:
+        ship_mode = row['Ship Mode']
+        category = row['Category']
+        sales = float(row['Sales'])
+        profit = float(row['Profit'])
+
+        if sales == 0:
+            continue
+
+        margin = profit / sales
+        key = (ship_mode, category)
+
+        if key not in margin_sum:
+            margin_sum[key] = 0
+            count[key] = 0
+
+        margin_sum[key] += margin
+        count[key] += 1
+
+    avg_margin = {}
+    for key in margin_sum:
+        avg_margin[key] = margin_sum[key] / count[key]
+    print(f'Average profit margin by ship mode and category: {avg_margin}')
+    return avg_margin
