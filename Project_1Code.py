@@ -313,7 +313,7 @@ def test_avg_order_value_by_segment_shipmode():
 
     # General Case 2
     val = result[('Consumer', 'Standard Class')]
-    assert abs(val - 150.0) < 0.001  # average order value should be 150 ✅
+    assert abs(val - 150.0) < 0.001  # average order value should be 150
 
     # Edge Case 1: Zero quantity
     data = [{'Segment': 'Consumer', 'Ship Mode': 'Standard Class', 'Sales': '100', 'Quantity': '0'}]
