@@ -247,3 +247,124 @@ def main():
                       ["Segment", "Ship Mode", "Avg Order Value"])
     write_dict_to_csv("top3_cities_by_profit_in_category.csv", top3_cities,
                       ["Category", "City1", "Profit1", "City2", "Profit2", "City3", "Profit3"])
+
+# =========================================================
+# Test Case
+# =========================================================
+
+def test_avg_profit_by_subcategory_region():
+    print("\nRunning test_avg_profit_by_subcategory_region...")
+    # General Case 1
+    data = [
+        {'Sub-Category': 'Phones', 'Region': 'East', 'Profit': '100'},
+        {'Sub-Category': 'Phones', 'Region': 'East', 'Profit': '300'}
+    ]
+    result = calculate_avg_profit_by_subcategory_region(data)
+    assert abs(result[('Phones', 'East')] - 200.0) < 0.001
+
+    # General Case 2
+    data.append({'Sub-Category': 'Chairs', 'Region': 'West', 'Profit': '400'})
+    result = calculate_avg_profit_by_subcategory_region(data)
+    assert ('Chairs', 'West') in result
+
+    # Edge Case 1: Zero profit
+    data = [{'Sub-Category': 'Phones', 'Region': 'East', 'Profit': '0'}]
+    result = calculate_avg_profit_by_subcategory_region(data)
+    assert result[('Phones', 'East')] == 0.0
+
+    # Edge Case 2: Empty list
+    data = []
+    result = calculate_avg_profit_by_subcategory_region(data)
+    assert result == {}
+#----------------------------------------------------------------------
+def test_profit_ratio_by_discount_region():
+    print("\nRunning test_profit_ratio_by_discount_region...")
+    # General Case 1
+    data = [
+        {'Discount': '0.1', 'Profit': '100', 'Sales': '1000', 'Region': 'East'},
+        {'Discount': '0.3', 'Profit': '20', 'Sales': '500', 'Region': 'East'}
+    ]
+    result = calculate_profit_ratio_by_discount_region(data)
+    assert 'East' in result
+
+    # General Case 2
+    low_ratio, high_ratio = result['East']
+    assert low_ratio >= high_ratio, f"Expected low discount ratio ≥ high discount ratio, got {low_ratio}, {high_ratio}"
+
+    # Edge Case 1: Zero sales
+    data = [{'Discount': '0.2', 'Profit': '100', 'Sales': '0', 'Region': 'West'}]
+    result = calculate_profit_ratio_by_discount_region(data)
+    assert result == {}
+
+    # Edge Case 2: Empty list
+    data = []
+    result = calculate_profit_ratio_by_discount_region(data)
+    assert result == {}
+#----------------------------------------------------------------------
+def test_avg_order_value_by_segment_shipmode():
+    print("\nRunning test_avg_order_value_by_segment_shipmode...")
+    # General Case 1
+    data = [
+        {'Segment': 'Consumer', 'Ship Mode': 'Standard Class', 'Sales': '200', 'Quantity': '1'},
+        {'Segment': 'Consumer', 'Ship Mode': 'Standard Class', 'Sales': '100', 'Quantity': '1'}
+    ]
+    result = calculate_avg_order_value_by_segment_shipmode(data)
+    assert ('Consumer', 'Standard Class') in result
+
+    # General Case 2
+    val = result[('Consumer', 'Standard Class')]
+    assert abs(val - 150.0) < 0.001  # average order value should be 150 ✅
+
+    # Edge Case 1: Zero quantity
+    data = [{'Segment': 'Consumer', 'Ship Mode': 'Standard Class', 'Sales': '100', 'Quantity': '0'}]
+    result = calculate_avg_order_value_by_segment_shipmode(data)
+    assert result == {}
+
+    # Edge Case 2: Empty data
+    result = calculate_avg_order_value_by_segment_shipmode([])
+    assert result == {}
+
+#----------------------------------------------------------------------
+def test_get_top3_cities_by_profit_in_category():
+    print("\nRunning test_get_top3_cities_by_profit_in_category...")
+    # General Case 1
+    data = [
+        {'City': 'New York', 'Profit': '500', 'Category': 'Furniture'},
+        {'City': 'Los Angeles', 'Profit': '400', 'Category': 'Furniture'},
+        {'City': 'Seattle', 'Profit': '300', 'Category': 'Furniture'}
+    ]
+    result = get_top3_cities_by_profit_in_category(data)
+    assert 'Furniture' in result
+    assert len(result['Furniture']) == 3
+
+    # General Case 2
+    top_city = result['Furniture'][0][0]
+    assert top_city == 'New York'
+
+    # Edge Case 1: Fewer than 3 cities
+    data = [
+        {'City': 'Detroit', 'Profit': '200', 'Category': 'Office Supplies'},
+        {'City': 'Chicago', 'Profit': '100', 'Category': 'Office Supplies'}
+    ]
+    result = get_top3_cities_by_profit_in_category(data)
+    assert len(result['Office Supplies']) <= 3
+
+    # Edge Case 2: Empty list
+    data = []
+    result = get_top3_cities_by_profit_in_category(data)
+    assert result == {}
+
+# =========================================================
+# Run program
+# =========================================================
+if __name__ == "__main__":
+    main()
+
+    print("\n====================")
+    print("Running Test Cases...")
+    print("====================")
+    test_avg_profit_by_subcategory_region()
+    test_profit_ratio_by_discount_region()
+    test_avg_order_value_by_segment_shipmode()
+    test_get_top3_cities_by_profit_in_category()
+    print("All tests completed successfully!")
