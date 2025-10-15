@@ -235,7 +235,7 @@ def main():
     print("Calculations complete!")
     print("Top 3 cities by profit (example):", top3_cities)
 
-   ''' write_dict_to_csv("avg_profit_by_subcategory_region.csv", avg_profit,
+    write_dict_to_csv("avg_profit_by_subcategory_region.csv", avg_profit,
                       ["Sub-Category", "Region", "Average Profit"])
     write_dict_to_csv("total_sales_by_region_segment.csv", total_sales,
                       ["Region", "Segment", "Total Sales"])
@@ -247,7 +247,7 @@ def main():
                       ["Segment", "Ship Mode", "Avg Order Value"])
     write_dict_to_csv("top3_cities_by_profit_in_category.csv", top3_cities,
                       ["Category", "City1", "Profit1", "City2", "Profit2", "City3", "Profit3"])
-'''
+
 # =========================================================
 # Test Case
 # =========================================================
