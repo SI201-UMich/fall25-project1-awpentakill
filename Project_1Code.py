@@ -45,3 +45,47 @@ def write_dict_to_csv(filename, result_dict, headers):
                 row.append(value)
 
             writer.writerow(row)
+
+
+# =========================================================
+# Calculations I
+# =========================================================
+
+def calculate_avg_profit_by_subcategory_region(data):
+    total_profit = {}
+    count = {}
+
+    for row in data:
+        subcat = row['Sub-Category']
+        region = row['Region']
+        profit = float(row['Profit'])
+        key = (subcat, region)
+
+        if key not in total_profit:
+            total_profit[key] = 0
+            count[key] = 0
+        total_profit[key] += profit
+        count[key] += 1
+
+    avg_profit = {}
+    for key in total_profit:
+        avg_profit[key] = total_profit[key] / count[key]
+    print(f'Average profit by subcategory and region: {avg_profit}')
+    return avg_profit
+
+
+def calculate_total_sales_by_region_segment(data):
+    sales_by_group = {}
+
+    for row in data:
+        region = row['Region']
+        segment = row['Segment']
+        sales = float(row['Sales'])
+        key = (region, segment)
+
+        if key not in sales_by_group:
+            sales_by_group[key] = 0
+        sales_by_group[key] += sales
+    print(f'Total sales by region and segment: {sales_by_group}')
+    return sales_by_group
+
